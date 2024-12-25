@@ -4,8 +4,10 @@ import { Field } from "../ui/field";
 import { PasswordInput } from "../ui/password-input";
 import { Toaster, toaster } from "../ui/toaster";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -31,7 +33,7 @@ const Login = () => {
         { email, password },
         config
       );
-      console.log(data);
+      navigate("/chats");
     } catch (error) {
       console.log("error: ", error);
       toaster.create({
@@ -50,23 +52,24 @@ const Login = () => {
           <Field label="Email">
             <Input
               placeholder="Enter your Email"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </Field>
           <Field label="Password">
             <PasswordInput
+            value = {password}
               placeholder="Enter Password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </Field>
           <Button type="submit">Submit</Button>
           <Button
-            type="submit"
             colorPalette="blue"
             m="5px 0 0 0"
             onClick={() => {
-              setEmail("test@mail.com");
-              setPassword("test@password");
+              setEmail(process.env.REACT_APP_GUEST_EMAIL);
+              setPassword(process.env.REACT_APP_GUEST_PASSWORD);
             }}
           >
             Get Guest User Credential

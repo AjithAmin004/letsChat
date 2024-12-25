@@ -9,9 +9,9 @@ const app = express();
 const port = process.env.PORT || 5000;
 dbConection(process.env.MONGO_URL)
 
-// app.get('/api/chats',(req,res)=>{
-//     res.status(200).send(chats)
-// })
+app.get('/api/chats',(req,res)=>{
+    res.status(200).send(chats)
+})
 
 // app.get('/api/chats/:id',(req,res)=>{
 //     const chat = chats.find((ele)=>ele._id==req.params.id)
