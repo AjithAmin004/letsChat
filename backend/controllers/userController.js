@@ -2,15 +2,18 @@ import asyncHandler from "express-async-handler";
 import userModel from "../model/userModel.js";
 
 const registerUser = asyncHandler(async (req,res)=>{
+    console.log("register route")
     const {name,email,password,pic} = req.body;
 
     if(!name || !email || !password){
         res.status(400);
         throw new Error('Please fill all the fields')
     }
-
+    
+    console.log("all good so far")
     const userExists = await userModel.findOne({email});
 
+    console.log("good again")
     if(userExists){
         res.status(400);
         throw new Error('User already exists');
@@ -24,6 +27,7 @@ const registerUser = asyncHandler(async (req,res)=>{
     })
 
     if(user){
+        console.log("user created")
         let token = user.generateAccessToken()
 
         res.status(201).json({
@@ -32,9 +36,9 @@ const registerUser = asyncHandler(async (req,res)=>{
             email:user.email,
             pic:user.pic,
             token:token
-
         })
     }else {
+        console.log("user not fpunf")
         res.status(400);
         throw new Error('User not found');
     }

@@ -1,13 +1,14 @@
-import "dotenv/config";
 import { Stack, Input } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import React, { useState } from "react";
 import { Field } from "../ui/field";
 import { PasswordInput } from "../ui/password-input";
 import { Toaster, toaster } from "../ui/toaster";
-
+import axios from "axios";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -15,8 +16,57 @@ const Signup = () => {
   const [pic, setPic] = useState();
   const [loading, setLoading] = useState(false);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    if (!name || !email || !password || !confirmpassword) {
+      setLoading(false);
+      toaster.create({
+        title: "Please fill all the fields",
+        type: "warning",
+        duration: 3000,
+      });
+      return;
+    }
+
+    if (password !== confirmpassword) {
+      setLoading(false);
+      toaster.create({
+        title: "Passwords do not match",
+        type: "warning",
+        duration: 3000,
+      });
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      let { data } = await axios.post(
+        "/api/user/register",
+        { name, email, password, pic },
+        config
+      );
+      toaster.create({
+        title: "Registration Successfull",
+        type: "success",
+        duration: 3000,
+      });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      navigate("/chats");
+    } catch (error) {
+      console.log("error: ", error);
+      toaster.create({
+        title: error?.response?.data?.message || "Something went wrong",
+        type: "error",
+        duration: 3000,
+      });
+      setLoading(false);
+    }
   };
 
   const postPicture = function (picture) {
@@ -29,24 +79,28 @@ const Signup = () => {
       });
     } else {
       const data = new FormData();
-      console.log("ok",process.env.UPLOAD_PRESENT)
       data.append("file", picture);
-      data.append("upload_preset", process.env.UPLOAD_PRESENT);
-      fetch(`https://api.cloudinary.com/v1_1/${process.env.UPLOAD_PRESENT}/image/upload`, {
+      data.append("cloud_name", process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+      data.append("upload_preset", process.env.REACT_APP_UPLOAD_PRESENT);
+      fetch(process.env.REACT_APP_CLOUDINARY_URL, {
         method: "post",
         body: data,
       })
         .then((res) => res.json())
         .then((data) => {
-            console.log("data",data)
           setPic(data.url.toString());
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          toaster.create({
+            title: "Picture not uploaded",
+            type: "warning",
+            duration: 3000,
+          });
+          setLoading(false);
         });
-        console.log(pic)
     }
-    setLoading(false);
   };
 
   return (

@@ -5,6 +5,7 @@ const notFound = (req,res,next)=>{
 }
 
 const errorMiddleware = (err,req,res,next)=>{
+    console.log(err,res.statusCode)
     const errStatus = res.statusCode || 500;
     const errMsg = err.message || 'Something went wrong';
     res.status(errStatus).json({
