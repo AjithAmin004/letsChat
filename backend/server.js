@@ -4,6 +4,7 @@ import chats  from "./data/data.js";
 import dbConection from "./config/db.js";
 import userRoutes from './routes/userRoutes.js'
 import {errorMiddleware,notFound } from './middleware/errorMiddleware.js'
+import chatRoutes from './routes/chatRoutes.js'
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,6 +20,7 @@ app.get('/api/chats',(req,res)=>{
 // })
 app.use(express.json())
 app.use('/api/user',userRoutes)
+app.use('/api/chat',chatRoutes)
 app.use(notFound)
 app.use(errorMiddleware)
 
