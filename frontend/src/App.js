@@ -3,7 +3,6 @@ import './App.css';
 import Home from './pages/Home.jsx'
 import Chat from './pages/Chat.jsx'
 
-
 function App() {
   return (
     <div>

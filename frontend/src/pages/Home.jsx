@@ -1,8 +1,22 @@
 import { Box, Container ,Text,Tabs } from '@chakra-ui/react'
 import  Login from '../components/Authentication/login.jsx'
 import  Signup  from '../components/Authentication/signup.jsx'
-import React from 'react'
+import React,{useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom'
 function Home() {
+
+  const navigate = useNavigate();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
+
+    if (userInfo) {
+      navigate("/chats");
+    }
+  }, [navigate]);
+
   return (
     <Container maxW ='xl' centerContent>
       <Box

@@ -13,10 +13,9 @@ const ChatProvider = ({children}) =>{
         if(!userInfo){
             navigate('/home')
         }
-
     },[navigate])
 
-    return <chatContext.provider value = {{user,setUser}}>{children}</chatContext.provider>
+    return <chatContext.Provider value = {{user, setUser}}>{children}</chatContext.Provider>
 }
 
 export const Chatstate = () =>{
